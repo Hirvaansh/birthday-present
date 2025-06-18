@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Dhara!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ffd6e0, #ffeacc);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      font-family: 'Pacifico', cursive;
+      color: #ff4d6d;
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      animation: fadeIn 2s ease;
+    }
+    p {
+      color: #444;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      animation: fadeIn 2s ease 0.5s forwards;
+    }
+    .btn {
+      padding: 0.8rem 2rem;
+      margin: 0.5rem;
+      background-color: #ff4d6d;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background-color: #ff1a4d;
+    }
+    #quiz, #ending {
+      display: none;
+      animation: fadeIn 1s ease;
+    }
+    .question {
+      margin: 2rem 0;
+    }
+    .question img {
+      max-width: 200px;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hidden-easter {
+      display: none;
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 2rem;
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .btn { font-size: 0.9rem; padding: 0.6rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="start">
+    <h1>Happy Birthday Dhara! 🎉</h1>
+    <p>Its your special birthday adventure. Every choice you make leads to a surprise ✨</p>
+    <button class="btn" onclick="startQuiz()">Start</button>
+  </div>
+
+  <div id="quiz">
+    <div class="question" id="q1">
+      <p>How good is your memory?</p>
+      <button class="btn" onclick="goTo('q2', 'goldfish')">Like a goldfish 🐟</button>
+      <button class="btn" onclick="goTo('q2', 'elephant')">Like an elephant 🐘</button>
+    </div>
+
+    <div class="question" id="q2">
+      <p>When someone tells you a secret...</p>
+      <button class="btn" onclick="goTo('q3', 'things')">You forget it instantly 😅</button>
+      <button class="btn" onclick="goTo('q3', 'never')">You protect it with your life 🤐</button>
+    </div>
+
+    <div class="question" id="q3">
+      <p>You're going on a trip. What's your role?</p>
+      <button class="btn" onclick="goTo('q4', 'planner')">Planner 📋</button>
+      <button class="btn" onclick="goTo('q4', 'late')">Fashionably late 🕒</button>
+    </div>
+
+    <div class="question" id="q4">
+      <p>Choose your vibe:</p>
+      <button class="btn" onclick="goTo('q5', 'drama')">Drama Queen 💅</button>
+      <button class="btn" onclick="goTo('q5', 'chill')">Chill Queen 😎</button>
+    </div>
+
+    <div class="question" id="q5">
+      <p>Final pick! What suits you most?</p>
+      <button class="btn" onclick="goToEnding('queen')">Sassy Queen 👑</button>
+      <button class="btn" onclick="goToEnding('cute')">Cutest Human Ever 🧸</button>
+      <button class="btn" onclick="goToEnding('names')">Forgetter of Names 🙃</button>
+    </div>
+  </div>
+
+  <div id="ending">
+    <h2 id="endingTitle"></h2>
+    <p id="endingText"></p>
+    <button class="btn" onclick="restartQuiz()">Try Again?</button>
+    <p class="hidden-easter" id="easterEgg">👀 If you read this... maybe there's a secret message meant just for you. Maybe someone really cares but isn't saying it yet.</p>
+  </div>
+
+  <audio autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-lovely.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    let path = [];
+
+    function startQuiz() {
+      path = [];
+      document.getElementById('start').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      const allQuestions = document.querySelectorAll('.question');
+      allQuestions.forEach(q => q.style.display = 'none');
+      document.getElementById('q1').style.display = 'block';
+    }
+
+    function goTo(nextId, choice) {
+      path.push(choice);
+      const allQuestions = document.querySelectorAll('.question');
+      allQuestions.forEach(q => q.style.display = 'none');
+      document.getElementById(nextId).style.display = 'block';
+    }
+
+    function goToEnding(finalChoice) {
+      path.push(finalChoice);
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('ending').style.display = 'block';
+
+      const title = document.getElementById('endingTitle');
+      const text = document.getElementById('endingText');
+
+      let message = "";
+
+      if (path.includes('goldfish') && path.includes('things')) {
+        title.innerText = "Oops...🐟";
+        message = "You might just be the most adorable forgetter on the planet. Goldfish memory at its finest!";
+        document.getElementById('easterEgg').style.display = 'block';
+      } else if (path.includes('late') && path.includes('names')) {
+        title.innerText = "Late & Lost 🤷‍♀️";
+        message = "You're late and you forget names... Dhara, you're unstoppable 😂";
+      } else if (path.includes('drama') && finalChoice === 'queen') {
+        title.innerText = "Dramatic Royalty! 👑";
+        message = "You're the queen of expression and sass. Bow down, world.";
+      } else if (path.includes('trip') && path.includes('cute')) {
+        title.innerText = "Wait a sec...";
+        message = "There’s someone who thinks you're really amazing. They won't say it (yet), but... it's definitely true. ❤️";
+        document.getElementById('easterEgg').style.display = 'block';
+      } else {
+        title.innerText = "Interesting Combo! ✨";
+        message = "You're full of surprises, aren't you? Keep shining! 🌟";
+      }
+
+      text.innerText = message;
+      confetti();
+    }
+
+    function restartQuiz() {
+      path = [];
+      document.getElementById('ending').style.display = 'none';
+      document.getElementById('start').style.display = 'block';
+      const allQuestions = document.querySelectorAll('.question');
+      allQuestions.forEach(q => q.style.display = 'none');
+      document.getElementById('easterEgg').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
